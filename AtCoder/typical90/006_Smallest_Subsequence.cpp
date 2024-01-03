@@ -9,26 +9,66 @@ const int maxn=100000+10;
 char s[maxn];
 int n,k;
 
-std::unordered_map<char,std::vector<int> > cache;
-
 // next数组和贪心算法
 int main()
 {
     scanf("%d %d",&n,&k);
     scanf("%s",s+1);
 
-    std::unordered_map<char,int> pos;
+    std::unordered_map<char,int> next[maxn];
 
     for(int i=n;i>=1;i-=1)
     {
-        
+        for(int j='a';j<='z';j+=1)
+        {
+            if(next[0].count(j))
+            {
+                next[i][j]=next[0][j];
+            }else
+            {
+                next[i][j]=-1;
+            }
+        }
+        next[0][s[i]]=i;
     }
+
+    /*
+    for(int i=0;i<=n;i+=1)
+    {
+        printf("next %d:",i);
+        for(int j='a';j<='z';j+=1)
+        {
+            if(next[i].count(j) && next[i][j]!=-1)
+            printf("%c->%d,",j,next[i].count(j)?next[i][j]:0);
+        }
+        puts("");
+    }
+    */
+    
+    std::vector<char> ans;
+    int left=0;
+    for(int i=1;i<=k;i+=1)
+    {
+        for(int j='a';j<='z';j+=1)
+        {
+            if(next[left].count(j)&&next[left][j]!=-1&&(n-next[left][j]>=k-i))
+            {
+                ans.push_back(j);
+                left=next[left][j];
+                break;
+            }
+        }
+    }
+
+    for(int i=0;i<ans.size();i+=1) printf("%c",ans[i]); puts("");
 
     return 0;
 }
 
 int main_1()
 {
+    std::unordered_map<char,std::vector<int> > cache;
+
     scanf("%d %d",&n,&k);
     scanf("%s",s+1);
 
