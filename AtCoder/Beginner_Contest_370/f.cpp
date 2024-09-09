@@ -4,12 +4,15 @@
 #include <algorithm>
 #include <iostream>
 #include <cstdint>
+#include <climits>
+#include <cstring>
 #include <unordered_map>
 #include <unordered_set>
 
 const int64_t maxn = 4e5 + 8;
 
 int64_t n,k,a[maxn],sum[maxn],succ_cut_size = 0;
+int64_t next[maxn], next_k[maxn], buffer[maxn];
 
 inline int64_t q_a(int64_t id)
 {
@@ -17,7 +20,75 @@ inline int64_t q_a(int64_t id)
     return a[id];
 }
 
+inline void join(int64_t* s1, int64_t* s2, int64_t* t)
+{
+    for(int64_t i=1;i<=2*n;i+=1)
+    {
+        t[i] = (s1[i] > 2*n) ? INT64_MAX : s2[s1[i]];
+    }
+}
+
 inline bool check(int64_t x)
+{
+    bool inited = false;
+
+    for(int64_t i=1;i<=2*n;i+=1)
+    {
+        next_k[i] = i;
+    }
+
+    int64_t l = 0, r = 1;
+    while(l < 2*n)
+    {
+        l += 1;
+        while(r <= 2*n && sum[r] - sum[l-1] < x)
+        {
+            r += 1;
+        }
+        next[l] = (r > 2*n) ? INT64_MAX : r + 1;
+    }
+
+    int64_t kk = k;
+    while(kk)
+    {
+        if(kk & 1)
+        {
+            if(!inited)
+            {
+                memcpy(next_k,next,sizeof(int64_t)*maxn);
+                inited = true;
+            }else
+            {
+                join(next_k,next,buffer);
+                memcpy(next_k,buffer,sizeof(int64_t)*maxn);
+            }
+        }
+
+        kk = kk >> 1;
+        join(next,next,buffer);
+        memcpy(next,buffer,sizeof(int64_t)*maxn);
+    }
+
+    succ_cut_size = 0;
+    for(int64_t i=1;i<=n;i+=1)
+    {
+        int64_t move = i;
+        /*
+        for(int64_t j=1;j<=k;j+=1)
+        {
+            move = (move > 2*n) ? INT64_MAX : next[move]; 
+        }
+        */
+       move = next_k[move];
+        if(move - i <= n)
+        {
+            succ_cut_size += 1;
+        }
+    }
+    return succ_cut_size > 0;
+}
+
+inline bool check_back(int64_t x)
 {
     std::unordered_set<int64_t> cut;
     std::unordered_set<int64_t> succ_cut;
@@ -75,6 +146,7 @@ inline bool check(int64_t x)
 
 int32_t main()
 {
+    // freopen("in.txt","r",stdin);
     std::cin >> n >> k;
 
     int64_t all = 0;
