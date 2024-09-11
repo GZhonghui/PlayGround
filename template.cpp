@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-using namespace std;
+using namespace std; // 只在算法比赛中这样写
 
 typedef int64_t ll;
 typedef double f;
