@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <vector>
 #include <stack>
+#include <cmath>
 #include <unordered_map>
 #include <unordered_set>
 
