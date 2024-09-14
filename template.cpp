@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <iomanip>  // for setprecision
 #include <cstdint>
 #include <climits>
 #include <cstring>
