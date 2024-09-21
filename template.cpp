@@ -7,8 +7,13 @@
 #include <cstdio>
 #include <vector>
 #include <stack>
+#include <queue>
+#include <deque>
+#include <list>
 #include <cmath>
+#include <map>
 #include <unordered_map>
+#include <set>
 #include <unordered_set>
 
 using namespace std; // 只在算法比赛中这样写
