@@ -91,7 +91,26 @@ int32_t main() {
         }
     }
 
-    ll l = search(k+1), r = search(k);
+    if(check(1e9 + 100) > k) {
+        cout << 0 << endl;
+        return 0;
+    }
+
+    if(check(1e9 + 100) == k)
+    {
+        cout << "Infinity" << endl;
+        return 0;
+    }
+
+    ll l = search(k+1) + 1, r = search(k);
+    /*
+    while(check(l) > k) l += 1;
+    while(l-1 >= 0 && check(l-1) <= k) l -= 1;
+
+    while(check(r) < k) r -= 1;
+    while(check(r+1) >= k) r += 1;
+    */
+    /*
     if(l > 1e9 + 1)
     {
         cout << 0 << endl;
@@ -99,6 +118,8 @@ int32_t main() {
     {
         cout << "Infinity" << endl;
     }else cout << r - l << endl;
+    */
+    cout << r - l + 1 << endl;
 
     return 0;
 }
