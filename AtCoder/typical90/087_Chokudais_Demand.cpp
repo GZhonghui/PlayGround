@@ -25,36 +25,80 @@ const ll inf = INT64_MAX;
 const f pi = acos(-1.0);
 const f eps = 1e-6;
 
-const ll MAXN = 50; // 较小的节点数，例如500
-ll dist[MAXN][MAXN];
+ll dist[maxn][maxn],dist_bck[maxn][maxn],n,p,k;
 
-ll n,p,k;
+inline void floydWarshall(ll selected_value) {
+    memcpy(dist,dist_bck,sizeof(ll)*maxn*maxn);
+    for(ll i=1;i<=n;i+=1) for(ll j=1;j<=n;j+=1)
+        dist[i][j] = (dist[i][j] == -1) ? selected_value : dist[i][j];
 
-void floydWarshall() {
     for (ll k = 1; k <= n; ++k) {
         for (ll i = 1; i <= n; ++i) {
             for (ll j = 1; j <= n; ++j) {
-                if (dist[i][k] != INT_MAX && dist[k][j] != INT_MAX)
-                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+                dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
             }
         }
     }
 }
 
+inline ll check(ll selected_value)
+{
+    floydWarshall(selected_value);
+
+    ll count = 0;
+    for(ll i=1;i<n;i+=1)
+    {
+        for(ll j=i+1;j<=n;j+=1)
+        {
+            if(dist[i][j] <= p) count += 1;
+        }
+    }
+
+    return count;
+}
+
+inline ll search(ll k)
+{
+    ll l = 0, r = 1e9 + 100;
+    while(r - l > 3)
+    {
+        ll mid = (l + r) >> 1;
+        ll count = check(mid);
+        if(count < k)
+        {
+            r = mid - 1;
+        }else l = mid;
+    }
+
+    ll r_to = r;
+    while(r_to >= l)
+    {
+        if(check(r_to) >= k) break;
+        r_to -= 1;
+    }
+
+    return r_to;
+}
+
 int32_t main() {
-    cin >> n >> p >> k;
+    cin >> n >> p >> k; // 正好有K组 P是距离限制
 
     for(ll i=1;i<=n;i+=1)
     {
         for(ll j=1;j<=n;j+=1)
         {
-            cin >> dist[i][j];
+            cin >> dist_bck[i][j];
         }
     }
 
-    floydWarshall();
-
-    
+    ll l = search(k+1), r = search(k);
+    if(l > 1e9 + 1)
+    {
+        cout << 0 << endl;
+    }else if(r > 1e9 + 1)
+    {
+        cout << "Infinity" << endl;
+    }else cout << r - l << endl;
 
     return 0;
 }
