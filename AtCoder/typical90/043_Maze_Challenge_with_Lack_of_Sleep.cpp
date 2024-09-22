@@ -1,7 +1,11 @@
 #include<algorithm>
 #include<cstdio>
+#include<cstdint>
 #include<cstring>
 #include<ctime>
+#include<queue>
+#include<deque>
+#include<unordered_map>
 
 // RE是因为递归爆栈了
 
@@ -10,18 +14,40 @@
 // 思考：什么样子的问题不能用DFS
 // TODO：问题已经确认并且证明了，接下来思考一下BFS的解法，官方提供了另一种基于图的解法
 
-const int max_size = 1e3+10;
+typedef int64_t ll;
+
+const int max_size = 1e3+5;
 const int inf = 1e9;
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
 
-int h, w, memory[max_size][max_size][4], done[max_size][max_size];
+int h, w;
 char map[max_size][max_size];
 
 struct Status
 {
-    int x,y,forward;
+    int x,y,forward,step,rot; // forward = [0,3]
+
+    int hash() const {
+        return ((int)x * max_size + y) * 10 + forward;
+    }
+
+    bool move_forward(Status *moved) const {
+        moved->x = x + dx[forward];
+        moved->y = y + dy[forward];
+        moved->forward = forward;
+        moved->step = step;
+        moved->rot = 0;
+
+        if(1 <= moved->x && moved->x <= h && 1 <= moved->y && moved->y <= w && map[moved->x][moved->y] == '.')
+            return true; return false;
+    }
 }start, target;
+
+namespace old
+{
+
+int memory[max_size][max_size][4], done[max_size][max_size];
 
 int search(Status status, bool allow_rotate = false)
 {
@@ -108,6 +134,74 @@ int main()
     for(int i=0;i<4;i+=1)
     {
         ans = std::min(ans, search((Status){target.x,target.y,i}));
+    }
+    printf("%d\n",ans);
+
+    return 0;
+}
+
+} // namespace old
+
+std::unordered_map<int,int> table;
+
+int main()
+{
+    scanf("%d %d",&h,&w);
+
+    scanf("%d %d",&start.x,&start.y);
+    scanf("%d %d",&target.x,&target.y);
+
+    for(int i=1;i<=h;i+=1)
+    {
+        scanf("%s",map[i] + 1);
+    }
+
+    // 用普通队列会一直TLE
+    // 用双端队列 考虑一下为什么 以前都没有遇到过这种情况
+    // step小的先更新
+    std::deque<Status> Q;
+    for(int i=0;i<4;i+=1) Q.push_back((Status){start.x,start.y,i,0,0});
+    while(!Q.empty())
+    {
+        Status top = Q.front();
+        Q.pop_front();
+
+        int id = top.hash();
+        if(!table.count(id)) table[id] = INT32_MAX;
+
+        if((int)top.step >= table[id]) continue;
+
+        table[id] = (int)top.step;
+
+        Status moved;
+        if(top.move_forward(&moved))
+        {
+            int id = moved.hash();
+            if(!table.count(id) || table[id] > moved.step)
+            Q.push_front(moved);
+        }
+
+        if(!top.rot)
+        for(int ii=-1;ii<=1;ii+=2)
+        {
+            int i = (top.forward + ii + 4) % 4;
+            if(i == top.forward) continue;
+            Status moved = (Status){top.x,top.y,i,top.step+1,1};
+            int id = moved.hash();
+            if(!table.count(id) || table[id] > moved.step)
+            Q.push_back(moved);
+        }
+    }
+
+    int ans = INT32_MAX;
+    for(int i=0;i<4;i+=1)
+    {
+        Status s = (Status){target.x,target.y,i};
+        int id = s.hash();
+        if(table.count(id))
+        {
+            ans = std::min(ans, table[id]);
+        }
     }
     printf("%d\n",ans);
 
