@@ -21,8 +21,8 @@ using namespace std; // 只在算法比赛中这样写
 typedef int64_t ll;
 typedef double f;
 
-const ll dx[4] = {0,0,1,-1};
-const ll dy[4] = {1,-1,0,0};
+const int dx[4] = {-1,0,1,0};
+const int dy[4] = {0,1,0,-1};
 
 const ll mod = 1e9+7;
 const ll maxn = 2e5 + 8;
