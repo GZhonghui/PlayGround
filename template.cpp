@@ -16,6 +16,8 @@
 #include <set>
 #include <unordered_set>
 
+#define mk make_pair
+
 using namespace std; // 只在算法比赛中这样写
 
 typedef int64_t ll;
