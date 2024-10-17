@@ -33,32 +33,45 @@ const ll inf = INT64_MAX;
 const f pi = acos(-1.0);
 const f eps = 1e-6;
 
-ll n,m,a[maxn],ans[maxn];
+ll n,m,a[maxn],ans[maxn],fa[maxn];
 vector<int> G[maxn];
+vector< pair<ll,ll> > edges;
+
+ll root(ll x)
+{
+    return fa[x] == x ? x : fa[x] = root(fa[x]);
+}
+
+void link(ll x, ll y)
+{
+    fa[root(x)] = root(y);
+}
 
 ll sch(ll x)
 {
     if(ans[x] != -1) return ans[x];
     ll &res = ans[x] = 0;
 
-    if(x == n)
+    if(x == root(n))
     {
         return res = 1;
     }
 
     for(ll i=0;i<G[x].size();i+=1)
     {
-        if(a[G[x][i]] == a[x]) continue;
+        // if(a[G[x][i]] == a[x]) continue;
         ll t = sch(G[x][i]);
         res = max(res, (t + (t && a[x] != a[G[x][i]] ? 1 : 0)));
     }
 
+    /*
     for(ll i=0;i<G[x].size();i+=1)
     {
         if(a[G[x][i]] != a[x]) continue;
         ll t = sch(G[x][i]);
         res = max(res, (t + (t && a[x] != a[G[x][i]] ? 1 : 0)));
     }
+    */
 
     return res;
 }
@@ -68,15 +81,29 @@ int main()
     memset(ans,-1,sizeof(ans));
 
     cin >> n >> m;
+    for(ll i=1;i<=n;i++) fa[i] = i;
+
     rep(i,n) cin >> a[i];
     rep(i,m) {
         static ll u,v;
         cin >> u >> v;
-        if(a[u] <= a[v]) G[u].push_back(v);
-        if(a[v] <= a[u]) G[v].push_back(u);
+        edges.push_back(mk(u,v));
+
+        if(a[u] == a[v]) link(u,v);
+        // if(a[u] <= a[v]) G[u].push_back(v);
+        // if(a[v] <= a[u]) G[v].push_back(u);
+    }
+    rep(i,m) {
+        static ll u,v,ru,rv;
+        u = edges[i-1].first, v = edges[i-1].second;
+        ru = root(u), rv = root(v);
+        if(ru != rv) {
+            if(a[ru] < a[rv]) G[ru].push_back(rv);
+            if(a[rv] < a[ru]) G[rv].push_back(ru);
+        }
     }
 
-    ll res = sch(1);
+    ll res = sch(root(1));
     cout << res << endl;
 
     return 0;
