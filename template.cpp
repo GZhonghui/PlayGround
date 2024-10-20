@@ -17,7 +17,7 @@
 #include <unordered_set>
 
 #define mk make_pair
-#define rep(i, n) for (ll i = 1; i <= (n); i++)
+#define rep(i, s, t) for (ll i = (s); i <= (t); i++)
 
 using namespace std; // only in algorithm contests
 
@@ -32,6 +32,15 @@ const ll maxn = 2e5 + 8;
 const ll inf = INT64_MAX;
 const f pi = acos(-1.0);
 const f eps = 1e-6;
+
+struct edge {
+    ll to,dis;
+};
+
+vector<edge> edges;
+vector<ll> G[maxn]; // id of target OR id of edge
+
+ll n,k;
 
 int main()
 {
