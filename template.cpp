@@ -19,7 +19,7 @@
 #define mk make_pair
 #define rep(i, n) for (ll i = 1; i <= (n); i++)
 
-using namespace std; // 只在算法比赛中这样写
+using namespace std; // only in algorithm contests
 
 typedef int64_t ll;
 typedef double f;
