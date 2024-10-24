@@ -44,6 +44,10 @@ ll n,k;
 
 int main()
 {
+#ifdef ZH_DEBUG
+    freopen("in.txt", "r", stdin);
+#endif
+
 
     return 0;
 }
