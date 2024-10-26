@@ -1,3 +1,6 @@
+// 置换 经典习题 值得复习
+// 搭配ABC377E一起看
+
 #include <algorithm>
 #include <iostream>
 #include <iomanip>  // for setprecision
@@ -40,9 +43,9 @@ struct edge {
 vector<edge> edges;
 vector<ll> G[maxn]; // id of target OR id of edge
 
-ll n,k,x[maxn],a[maxn],ans[maxn],cache[maxn];
+ll n,k,x[maxn],a[maxn],ans[maxn];
 
-struct xn
+struct node
 {
     ll x[maxn];
 
@@ -55,12 +58,23 @@ struct xn
     }
 }xs;
 
-xn qpow(xn x, ll c)
+node qpow(node x, ll c)
 {
-    if(c == 0)
-    {
-        
+    if(c == 0){
+        node res;
+        rep(i,1,n) res.x[i] = i;
+        return res;
     }
+    else if(c == 1) return x;
+
+    ll hc = c >> 1;
+    node hx1 = qpow(x, hc);
+    node hx2 = hx1;
+    hx1.mul(hx2.x);
+
+    if(c & 1) hx1.mul(x.x);
+
+    return hx1;
 }
 
 int main()
@@ -74,7 +88,7 @@ int main()
     rep(i, 1, n) cin >> a[i];
 
     memcpy(xs.x, x, sizeof(x));
-    xn xf = qpow(xs, k);
+    node xf = qpow(xs, k);
     rep(i, 1, n)
     {
         ans[i] = a[xf.x[i]];
