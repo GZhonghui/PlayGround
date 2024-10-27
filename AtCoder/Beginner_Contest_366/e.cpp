@@ -40,13 +40,32 @@ struct edge {
 vector<edge> edges;
 vector<ll> G[maxn]; // id of target OR id of edge
 
-ll n,k;
+ll n,d,x[maxn],y[maxn];
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+
+    cin >> n >> d;
+    rep(i,1,n) cin >> x[i] >> y[i];
+
+    sort(x+1,x+1+n);
+
+    ll h_d = 0,h_idx = -2e6-10;
+    rep(i,1,n) h_d += abs(x[i] - h_idx);
+
+    queue<ll> q; rep(i,1,n) q.push(x[i]);
+    rep(i,h_idx,-h_idx) {
+        // h_d
+
+        ll h_rcount = q.size();
+        ll h_lcount = n - h_rcount;
+        h_d += h_lcount;
+        h_d -= h_rcount;
+        while(!q.empty() && q.front() <= i+1) q.pop();
+    }
 
 
     return 0;
