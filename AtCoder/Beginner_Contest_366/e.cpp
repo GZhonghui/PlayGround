@@ -52,13 +52,44 @@ int main()
     rep(i,1,n) cin >> x[i] >> y[i];
 
     sort(x+1,x+1+n);
+    sort(y+1,y+1+n);
 
+    unordered_map<ll,ll> m;
+    vector<ll> rd;
+    {
+        ll v_d = 0,v_idx = -2e6-10;
+        rep(i,1,n) v_d += abs(y[i] - v_idx);
+
+        queue<ll> q; rep(i,1,n) q.push(y[i]);
+        rep(i,v_idx,-v_idx) {
+            // v_d
+            if(!m.count(v_d)) m[v_d] = 0;
+            m[v_d] += 1;
+            rd.push_back(v_d);
+            
+            ll v_rcount = q.size();
+            ll v_lcount = n - v_rcount;
+            v_d += v_lcount;
+            v_d -= v_rcount;
+            while(!q.empty() && q.front() <= i+1) q.pop();
+        }
+
+        sort(rd.begin(),rd.end());
+    }
+
+    ll ans = 0;
     ll h_d = 0,h_idx = -2e6-10;
     rep(i,1,n) h_d += abs(x[i] - h_idx);
 
     queue<ll> q; rep(i,1,n) q.push(x[i]);
     rep(i,h_idx,-h_idx) {
         // h_d
+        ll v_remain = d - h_d;
+        if(v_remain >= 0) {
+            ll c = upper_bound(rd.begin(),rd.end(),v_remain) - rd.begin();
+
+            ans += c;
+        }
 
         ll h_rcount = q.size();
         ll h_lcount = n - h_rcount;
@@ -67,6 +98,6 @@ int main()
         while(!q.empty() && q.front() <= i+1) q.pop();
     }
 
-
+    cout << ans << endl;
     return 0;
 }
