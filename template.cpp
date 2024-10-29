@@ -22,6 +22,7 @@
 using namespace std; // only in algorithm contests
 
 typedef int64_t ll;
+typedef uint64_t ull;
 typedef double f;
 
 const int dx[4] = {-1,0,1,0};
