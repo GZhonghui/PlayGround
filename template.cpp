@@ -37,6 +37,11 @@ const f eps = 1e-6;
 
 template<class T> struct point {
     T x,y;
+
+    T dis2(const point &r) {
+        T dx = x - r.x, dy = y - r.y;
+        return dx * dx + dy * dy;
+    }
 };
 
 typedef point<ll> pl;
