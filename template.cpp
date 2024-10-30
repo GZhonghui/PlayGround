@@ -35,12 +35,19 @@ const ll inf = INT64_MAX;
 const f pi = acos(-1.0);
 const f eps = 1e-6;
 
+template<class T> struct point {
+    T x,y;
+};
+
+typedef point<ll> pl;
+typedef point<f> pf;
+
 struct edge {
     ll to,dis;
 };
 
 vector<edge> edges;
-vector<ll> G[maxn]; // id of target OR id of edge
+vector<ll> g[maxn]; // id of target OR id of edge
 
 ll n,k;
 
