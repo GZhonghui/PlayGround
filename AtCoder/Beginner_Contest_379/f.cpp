@@ -135,7 +135,7 @@ int main()
             solver.Add(static_cast<int>(left_to[after]), 1);
             after -= 1;
         }
-        ans[a.id] = solver.Sum(static_cast<int>(a.l));
+        ans[a.id] = solver.Sum(static_cast<int>(a.l+1));
     }
 
     rep(i,1,q) cout << ans[i] << endl;
