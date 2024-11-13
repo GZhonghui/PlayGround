@@ -54,7 +54,34 @@ struct edge {
 vector<edge> edges;
 vector<ll> g[maxn]; // id of target OR id of edge
 
-ll n,k;
+ll n,m,a[maxn],s[maxn];
+
+struct LowBitTree
+{
+    int C[maxn],n;
+    void init(int n=maxn-1) // n为支持的数据规模，支持的下标范围是[1,n]
+    {
+        this->n=n;
+        memset(C,0,sizeof(int)*maxn);
+    }
+    int lowbit(int x){ return x&(-x); }
+    int Sum(int pos) // 计算Sum[1,pos]
+    {
+        pos += 1;
+        int ans=0;
+        for(int i=pos;i;i-=lowbit(i)) ans+=C[i];
+        return ans;
+    }
+    void Add(int pos,int value) // 在pos的位置增加value
+    {
+        pos += 1;
+        for(int i=pos;i<=n;i+=lowbit(i)) C[i]+=value;
+    }
+}solver;
+
+// 本题提供的一个很重要的 多个区间的求和思路
+// 区间求和是 前缀和的右端点 - 左端点
+// 多个区间求和就是 右端点的求和 - 左端点的求和
 
 int main()
 {
@@ -62,6 +89,27 @@ int main()
     freopen("in.txt", "r", stdin);
 #endif
 
+    cin >> n >> m;
+    rep(i,1,n) cin >> a[i];
+
+    s[0] = 0;
+    rep(i,1,n) s[i] = (s[i-1] + a[i]) % m;
+
+    solver.init();
+    solver.Add(0, 1);
+
+    ll ans = 0, sum_l = 0;
+    rep(r,1,n) {
+        ll local = 0;
+        local += s[r] * r - sum_l;
+        local += m * (r - solver.Sum(s[r]));
+
+        solver.Add(s[r], 1);
+        sum_l += s[r];
+
+        ans += local;
+    }
+    cout << ans << endl;
 
     return 0;
 }
