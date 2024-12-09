@@ -19,6 +19,7 @@
 #define mk make_pair
 #define pb push_back
 #define rep(i, s, t) for (ll i = (s); i <= (t); i++)
+#define rre(i, s, t) for (ll i = (t); i >= (s); i--)
 
 using namespace std; // only in algorithm contests
 
@@ -29,9 +30,9 @@ typedef double f;
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
 
-const ll mod = 1e9+7;
 const ll maxn = 2e5 + 8;
-const ll inf = INT64_MAX;
+const ll mod = 1e9 + 7;
+const ll inf = 1e9 + 8;
 const f pi = acos(-1.0);
 const f eps = 1e-6;
 
