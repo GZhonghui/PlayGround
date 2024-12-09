@@ -59,16 +59,15 @@ char s[maxn];
 
 inline ll slash_count(ll l, ll r)
 {
-    if(l <= r) return slash_sum[r] - slash_sum[l-1]; return 0;
+    if(l <= r) return slash_sum[min(n,r)] - slash_sum[max((ll)1,l)-1]; return 0;
 }
 
 inline bool check(ll l, ll r, ll len)
 {
     ll left_1 = sum[1][l-1], right_2 = sum[2][r+1];
     ll need_1 = left_1 + len, need_2 = right_2 + len;
+    if(xth[1][need_1] == -1 || xth[2][need_2] == -1) return false;
     ll r_side_1 = max(l-1,xth[1][need_1]), l_side_2 = min(r+1,xth[2][need_2]);
-
-    if(r_side_1 == -1 || l_side_2 == -1) return false;
     if(r_side_1 >= l_side_2) return false;
     return slash_count(r_side_1+1,l_side_2-1) >= 1;
 }
