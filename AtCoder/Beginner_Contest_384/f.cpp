@@ -57,35 +57,6 @@ vector<ll> g[maxn]; // id of target OR id of edge
 
 ll n,a[maxn];
 
-#include<iostream>
-#include<cstdio>
-#include<algorithm>
-#include<cstring>
-using namespace std;
-const int maxn=1024;
-struct LowBitTree
-{   
-    // 树状数组求和的区间包括0的话，会出一点小问题，因为lowbit(0) = 0
-    // 如果需要包括0的话，可以在Add和Sum的函数内部统一做一个偏移
-    int C[maxn],n;
-    void init(int n=maxn-1) // n为支持的数据规模，支持的下标范围是[1,n]
-    {
-        this->n=n;
-        memset(C,0,sizeof(int)*maxn);
-    }
-    int lowbit(int x){ return x&(-x); }
-    int Sum(int pos) // 计算Sum[1,pos]
-    {
-        int ans=0;
-        for(int i=pos;i;i-=lowbit(i)) ans+=C[i];
-        return ans;
-    }
-    void Add(int pos,int value) // 在pos的位置增加value
-    {
-        for(int i=pos;i<=n;i+=lowbit(i)) C[i]+=value;
-    }
-};
-
 int main()
 {
 #ifdef ZH_DEBUG
@@ -94,8 +65,41 @@ int main()
     cin >> n;
     rep(i,1,n) cin >> a[i];
 
+    ll m = 1, d[32];
 
+    rep(k,0,25) {
+        d[k] = 0;
+        unordered_map<ll,ll> cnt;
+        unordered_map<ll,ll> sum;
+        rep(i,1,n) {
+            ll self = a[i] % m;
+            ll target = (m - self) % m;
 
+            if(!cnt.count(self)) cnt[self] = 0;
+            if(!sum.count(self)) sum[self] = 0;
+            cnt[self] += 1;
+            sum[self] += a[i];
+            
+            d[k] += (
+                cnt.count(target) ? cnt[target] : 0
+            ) * a[i] + (
+                sum.count(target) ? sum[target] : 0
+            );
+
+        }
+
+        // cout << k << " " << d[k] << endl;
+        
+        m <<= 1;
+    }
+
+    m = 1;
+    ll ans = 0;
+    rep(k,0,24) {
+        ans += (d[k] - d[k+1]) / m;
+        m <<= 1;
+    }
+    cout << ans << endl;
 
     return 0;
 }
