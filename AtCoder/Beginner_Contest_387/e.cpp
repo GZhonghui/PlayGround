@@ -55,14 +55,62 @@ struct edge {
 vector<edge> edges;
 vector<ll> g[maxn]; // id of target OR id of edge
 
-ll n,k;
+string n;
+
+inline bool check(ll x) {
+    ll sum = 0, _x = x;
+    while(x) {
+        sum += x % 10;
+        x /= 10;
+    }
+
+    return _x % sum == 0;
+}
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+    cin >> n;
+    if(n.length() < 7) {
+        ll _n = stoi(n);
 
+        bool last = false;
+        rep(i, _n, _n << 1) {
+            bool now = check(i);
+            if(now && last) {
+                cout << i - 1 << endl;
+                return 0;
+            }
+            last = now;
+        }
+
+        cout << -1 << endl;
+        return 0;
+    }
+
+    string head = "00";
+    memcpy((void *)head.c_str(), (void *)n.c_str(), 2);
+    ll _head = stoi(head);
+
+    auto zeros = [](int cnt) {
+        while(cnt--) cout << 0;
+    };
+
+    if(10 <= _head && _head <= 16) {
+        cout << 17;
+    } else if(17 <= _head && _head <= 25) {
+        cout << 26;
+    } else if(26 <= _head && _head <= 34) {
+        cout << 35;
+    } else if(35 <= _head && _head <= 61) {
+        cout << 62;
+    } else if(62 <= _head && _head <= 99) {
+        cout << 107;
+    }
+    zeros(n.length() - 2);
+    cout << endl;
 
     return 0;
 }
