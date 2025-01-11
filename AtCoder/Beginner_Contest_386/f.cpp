@@ -30,7 +30,7 @@ typedef long double f;
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
 
-const ll maxn = 2e5 + 8;
+const ll maxn = 500000 + 8;
 const ll mod = 1e9 + 7;
 const ll inf = 1e9 + 8;
 const f pi = acos(-1.0);
@@ -55,14 +55,39 @@ struct edge {
 vector<edge> edges;
 vector<ll> g[maxn]; // id of target OR id of edge
 
-ll n,k;
+ll k;
+char s[maxn], t[maxn];
+map< pair<ll, ll>, ll > mem;
+ll mem_raw[maxn * 45];
+
+ll dis(ll i, ll j) {
+    if(i == 0 && j == 0) return 0;
+    if(i == 0) return j;
+    if(j == 0) return i;
+    if(abs(i - j) > k) return abs(i - j);
+    // if(mem.count(mk(i,j))) return mem[mk(i,j)];
+    ll id = i * 42 + j;
+    if(mem_raw[id] != -1) return mem_raw[id];
+
+    ll res = min(
+        dis(i-1, j) + 1,
+        min(
+            dis(i, j-1) + 1,
+            dis(i-1, j-1) + (s[i] == t[j] ? 0 : 1)
+        )
+    );
+    return mem_raw[id] = res;
+    // return mem[mk(i,j)] = res;
+}
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
-
+    memset(mem_raw, -1, sizeof(mem_raw));
+    cin >> k >> (s+1) >> (t+1);
+    cout << ((dis(strlen(s+1), strlen(t+1)) <= k) ? "Yes" : "No") << endl;
 
     return 0;
 }
