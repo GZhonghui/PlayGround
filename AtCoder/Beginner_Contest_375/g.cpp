@@ -148,7 +148,7 @@ using namespace std;
 typedef int64_t ll;
 
 const ll maxn = ::maxn;
-const ll inf = 1e18;
+const ll inf = 1e16;
 
 struct Edge{
     ll to,dis,id;
@@ -216,16 +216,21 @@ public:
         memcpy(buffer,d,sizeof(ll)*(n+1));
     }
 
-    void calc_cut_edges(vector<::edge> &cut_edges) {
+    void calc_cut_edges(vector<::edge> &shortest_edges) {
         queue<ll> Q;
+        unordered_set<ll> S;
         Q.push(n);
+        S.insert(n);
         while(!Q.empty()) {
             ll u = Q.front(); Q.pop();
             for(ll i = 0; i < G[u].size(); i++) {
                 Edge &e = edges[G[u][i]];
                 if(d[e.to] + e.dis == d[u]) {
-                    Q.push(e.to);
-                    cut_edges.pb((::edge){e.id, u, e.to, e.dis});
+                    if(!S.count(e.to)) {
+                        Q.push(e.to);
+                        S.insert(e.to);
+                    } 
+                    shortest_edges.pb((::edge){e.id, u, e.to, e.dis});
                 }
             }
         }
@@ -309,19 +314,19 @@ protected:
     }
 
     // from: https://oi-wiki.org/graph/cut/
-    void tarjan_e(int u, int fa, vector<int> &cut_edges) {
+    void tarjan_e(int u, int fa, vector<int> &shortest_edges) {
         bool flag = false;
         father[u] = fa;
         low[u] = dfn[u] = ++idx;
         for (int k : g[u]) {
             int v = edges[k].v;
             if (!dfn[v]) {
-                tarjan_e(v, u, cut_edges);
+                tarjan_e(v, u, shortest_edges);
                 low[u] = min(low[u], low[v]);
                 if (low[v] > dfn[u]) {
                     is_cut_edge[v] = true;
                     cnt_cut_edges++;
-                    cut_edges.push_back(edges[k].id);
+                    shortest_edges.push_back(edges[k].id);
                 }
             } else {
                 if (v != fa || flag)
@@ -355,7 +360,7 @@ public:
         }
     }
 
-    void calc_cut_edges(vector<int> &cut_edges) {
+    void calc_cut_edges(vector<int> &shortest_edges) {
         dfn = vector<int>(n + 1, 0);
         low = vector<int>(n + 1, 0);
         father = vector<int>(n + 1, 0);
@@ -363,11 +368,11 @@ public:
         is_cut_edge = vector<bool>(n + 1, false);
         cnt_cut_edges = 0;
 
-        cut_edges.clear();
+        shortest_edges.clear();
         for(int i = 1; i <= n; i++) {
             if(!dfn[i]) {
                 idx = 0;
-                tarjan_e(i, i, cut_edges);
+                tarjan_e(i, i, shortest_edges);
             }
         }
     }
@@ -394,21 +399,21 @@ int main()
 
     Dijkstra::dij_solver.calc(1);
 
-    vector<edge> cut_edges;
+    vector<edge> shortest_edges;
     // for(edge e : edges) {
     //     ll u = e.from, v = e.to, w = e.dis;
     //     ll d1 = Dijkstra::dij_solver.query(u);
     //     ll d2 = Dijkstra::dij_solver.query(v);
     //     if(min(d1,d2) + w == max(d1,d2)) {
-    //         cut_edges.pb(e);
+    //         shortest_edges.pb(e);
     //     }
     // }
-    Dijkstra::dij_solver.calc_cut_edges(cut_edges);
+    Dijkstra::dij_solver.calc_cut_edges(shortest_edges);
 
-    cut_solver.init(n, cut_edges.size());
+    cut_solver.init(n, shortest_edges.size());
 
     ll e_idx = 0;
-    for(edge e : cut_edges) {
+    for(edge e : shortest_edges) {
         cut_solver.add_edge(e.from, e.to, ++e_idx);
     }
 
@@ -419,8 +424,13 @@ int main()
     cut_solver.calc_cut_edges(cut_edges_id);
 
     for(int id : cut_edges_id) {
-        ans[cut_edges[id - 1].id] = true;
+        ans[shortest_edges[id - 1].id] = true;
     }
+
+    // test
+    // for(edge e : shortest_edges) {
+    //     ans[e.id] = true;
+    // }
 
     rep(i,1,m) {
         cout << (ans[i] ? "Yes" : "No") << endl;
