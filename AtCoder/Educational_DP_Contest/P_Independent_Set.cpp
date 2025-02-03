@@ -37,7 +37,7 @@ typedef long double f; // may cause WA...
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
 
-const ll maxn = 2e5 + 8;
+const ll maxn = 1e5 + 8;
 const ll mod = 1e9 + 7;
 const ll inf = 1e16 + 8;
 const f pi = acos(-1.0);
@@ -143,14 +143,53 @@ vector<ll> g[maxn]; // id of target OR id of edge
 
 // graph END
 
-ll n;
+ll n,memo[maxn][2];
+
+ll dp(ll x, ll fa, ll color) {
+    if(memo[x][color] != -1) return memo[x][color];
+
+    ll &res = memo[x][color];
+
+    vector<ll> sons_ans;
+
+    for(ll to : g[x]) {
+        if(to == fa) continue;
+
+        ll _ans = dp(to, x, 1);
+        if(color) _ans = (_ans + dp(to, x, 0)) % mod;
+        sons_ans.pb(_ans);
+        // cout << "add " << _ans << " -> " << to << endl;
+    }
+
+    res = 1;
+    for(ll _v : sons_ans) {
+        res = (res * _v) % mod;
+    }
+
+    // cout << x << ", " << color << " = " << res << "; ";
+    // for(ll _t : sons_ans) {
+    //     cout << _t << ", ";
+    // }
+    // cout << endl;
+
+    return res;
+}
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+    cin >> n;
+    rep(i,1,n-1) {
+        static ll x,y;
+        cin >> x >> y;
+        g[x].pb(y);
+        g[y].pb(x);
+    }
 
+    memset(memo, -1, sizeof(memo));
+    cout << (dp(1, -1, 0) + dp(1, -1, 1)) % mod << endl;
 
     return 0;
 }

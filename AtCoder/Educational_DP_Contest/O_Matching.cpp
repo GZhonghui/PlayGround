@@ -9,11 +9,11 @@
 #include <cstdio>
 #include <vector>
 #include <random>
-#include <cmath>
 #include <stack>
 #include <queue>
 #include <deque>
 #include <list>
+#include <cmath>
 #include <map>
 #include <unordered_map>
 #include <set>
@@ -37,9 +37,9 @@ typedef long double f; // may cause WA...
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
 
-const ll maxn = 2e5 + 8;
+const ll maxn = 21 + 2;
 const ll mod = 1e9 + 7;
-const ll inf = 1e16 + 8;
+const ll inf = 1e9 + 8;
 const f pi = acos(-1.0);
 const f eps = 1e-6;
 
@@ -143,14 +143,23 @@ vector<ll> g[maxn]; // id of target OR id of edge
 
 // graph END
 
-ll n;
+ll n,a[maxn][maxn],dp[1 << maxn];
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+    cin >> n;
+    rep(i,1,n) rep(j,1,n) cin >> a[i][j];
 
+    dp[0] = 1;
+    rep(S,1,(1<<n)-1) {
+        ll _cnt = 0;
+        rep(i,1,n) if(bit(S,i)) _cnt += 1;
+        rep(i,1,n) if(bit(S,i) && a[i][_cnt]) dp[S] = (dp[S] + dp[S ^ (1LL << (i - 1))]) % mod;
+    }
+    cout << dp[(1LL << n) - 1] << endl;
 
     return 0;
 }
