@@ -1,4 +1,4 @@
-// C++ >= 17
+// C++ >= 17, all 1-indexed (except atcoder library)
 
 #include <algorithm>
 #include <iostream>
@@ -25,7 +25,10 @@
 #define pb push_back
 #define rep(i, s, t) for (ll i = (s); i <= (t); i++)
 #define rre(i, s, t) for (ll i = (t); i >= (s); i--)
-#define bit(S, k) (S & (1LL << (k - 1)))
+#define bit_q1(S, k) (S & (1LL << (k - 1))) // query bit k is 1 or not
+#define bit_s0(S, k) (S & (~(1LL << (k - 1)))) // set bit k to 0
+#define bit_s1(S, k) (S | (1LL << (k - 1))) // set bit k to 1
+#define bit_c1(S) __builtin_popcountll(S) // count number of 1 in S
 
 using namespace std; // only in algorithm contests
 using namespace atcoder;
