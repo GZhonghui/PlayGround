@@ -67,6 +67,8 @@ struct hashable_value {
         }
     };
 };
+
+// std::unordered_map uses std::hash on default
 unordered_map<hashable_value, string, hashable_value::hash> custom_hash_map;
 
 // hash END
