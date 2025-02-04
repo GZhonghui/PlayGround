@@ -46,6 +46,31 @@ const ll inf = 1e16 + 8;
 const f pi = acos(-1.0);
 const f eps = 1e-6;
 
+// hash BEGIN
+
+struct hashable_value {
+    static const ll maxv = 1e6 + 1;
+
+    ll x,y,z;
+
+    hashable_value(ll x = 0, ll y = 0, ll z = 0) : x(x), y(y), z(z) {}
+
+    bool operator==(const hashable_value &r) const {
+        return x == r.x && y == r.y && z == r.z;
+    }
+
+    struct hash {
+        // size_t is 64-bits width on 64-bits system
+        size_t operator()(const hashable_value &v) const {
+            ll id = (v.x * hashable_value::maxv + v.y) * hashable_value::maxv + v.z;
+            return static_cast<size_t>(id);
+        }
+    };
+};
+unordered_map<hashable_value, string, hashable_value::hash> custom_hash_map;
+
+// hash END
+
 // lazysegtree BEGIN
 
 struct S_both {
