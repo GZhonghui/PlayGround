@@ -1,5 +1,7 @@
 // C++ >= 17, all 1-indexed (except atcoder library)
 
+// #pragma GCC optimize ("-O3") // use it only when in need
+
 #include <algorithm>
 #include <iostream>
 #include <iomanip>  // for setprecision
