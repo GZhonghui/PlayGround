@@ -144,6 +144,8 @@ inline void lazy_segtree_toolkit() {
     seg.apply(1, 5, F_both{3, 0, false}); // [1, 5)
     // query data of range [l, r)
     S_both res_range = seg.prod(2, 6); // [2, 6)
+
+    cout << res_single.len << endl; // disable warning of unused variable
 }
 
 // lazysegtree END
