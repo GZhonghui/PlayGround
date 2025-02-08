@@ -1,4 +1,4 @@
-// C++ >= 17, all 1-indexed (except atcoder library)
+// C++ >= 17, all 1-indexed, all intervals are closed intervals (except atcoder library)
 
 // #pragma GCC optimize ("-O3") // use it only when in need
 
@@ -145,7 +145,7 @@ inline void lazy_segtree_toolkit() {
     // query data of range [l, r)
     S_both res_range = seg.prod(2, 6); // [2, 6)
 
-    cout << res_single.len << endl; // disable warning of unused variable
+    cout << res_single.len << " " << res_range.len << endl; // disable warning of unused variable
 }
 
 // lazysegtree END
