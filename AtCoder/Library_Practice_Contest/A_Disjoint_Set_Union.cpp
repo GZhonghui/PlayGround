@@ -2,6 +2,7 @@
 
 一些ACL共通的内容：
 区间都是左闭右开，下标都是0-indexed，C++17以上语言标准
+https://atcoder.github.io/ac-library/production/document_en/index.html
 
 并查集
 
