@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <vector>
 #include <random>
+#include <bitset> // for bitset, bitset<length>(int_number)
 #include <cmath>
 #include <stack>
 #include <queue>
