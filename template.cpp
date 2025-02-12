@@ -2,6 +2,8 @@
 
 // #pragma GCC optimize ("-O3") // use it only when in need
 
+// #define ZH_ACL // use atcoder library
+
 #include <algorithm>
 #include <iostream>
 #include <iomanip>  // for setprecision
@@ -22,7 +24,10 @@
 #include <set>
 #include <unordered_set>
 
+#ifdef ZH_ACL
 #include <atcoder/all>
+using namespace atcoder;
+#endif
 
 #define mk make_pair
 #define pb push_back
@@ -34,7 +39,6 @@
 #define bit_c1(S) __builtin_popcountll(S) // count number of 1 in S
 
 using namespace std; // only in algorithm contests
-using namespace atcoder;
 
 typedef int64_t ll;
 typedef uint64_t ull;
@@ -78,6 +82,7 @@ unordered_map<hashable_value, string, hashable_value::hash> custom_hash_map;
 
 // lazysegtree BEGIN
 
+#ifdef ZH_ACL
 struct S_both {
     ll sum;
     ll max;
@@ -148,6 +153,7 @@ inline void lazy_segtree_toolkit() {
 
     cout << res_single.len << " " << res_range.len << endl; // disable warning of unused variable
 }
+#endif
 
 // lazysegtree END
 
