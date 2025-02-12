@@ -38,7 +38,7 @@ using namespace atcoder;
 
 typedef int64_t ll;
 typedef uint64_t ull;
-typedef long double f; // may cause WA...
+typedef long double f; // may cause WA on old version compiler...
 
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
@@ -177,6 +177,8 @@ vector<edge> edges;
 vector<ll> g[maxn]; // id of target OR id of edge
 
 // graph END
+
+// ========== INSERT CODE BELOW ==========
 
 ll n;
 
