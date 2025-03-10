@@ -186,14 +186,59 @@ vector<ll> g[maxn]; // id of target OR id of edge
 
 // ========== INSERT CODE BELOW ==========
 
-ll n;
+ll n, x, u[maxn], d[maxn];
+
+bool check(ll k) {
+    auto u_cnt = make_pair(0, k);
+
+    auto union_pair = [&](pair<ll, ll> a, pair<ll, ll> b) -> pair<ll, ll> {
+        a.first = max((ll)0, a.first - x);
+        a.second = min(k, a.second + x);
+        return make_pair(max(a.first, b.first), min(a.second, b.second));
+    };
+
+    rep(i, 1, n) {
+        auto t = make_pair(max((ll)0, k - d[i]), u[i]);
+        u_cnt = union_pair(u_cnt, t);
+        if(u_cnt.first > u_cnt.second) {
+            return false;
+        }
+    }
+
+    return u_cnt.first <= u_cnt.second;
+}
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+    ll l = 0, r = inf;
+    cin >> n >> x;
+    rep(i, 1, n) {
+        cin >> u[i] >> d[i];
+        r = min(r, u[i] + d[i]);
+    }
 
+    while(r - l > 3) {
+        ll mid = (l + r) >> 1;
+        if(check(mid)) {
+            l = mid;
+        } else {
+            r = mid - 1;
+        }
+    }
+
+    rre(i, l, r) {
+        if(check(i)) {
+            ll ans = 0;
+            rep(j, 1, n) {
+                ans += u[j] + d[j] - i;
+            }
+            cout << ans << endl;
+            return 0;
+        }
+    }
 
     return 0;
 }

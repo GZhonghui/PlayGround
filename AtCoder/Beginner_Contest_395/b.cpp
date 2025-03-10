@@ -47,7 +47,7 @@ typedef long double f; // may cause WA on old version compiler...
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
 
-const ll maxn = 2e5 + 8;
+const ll maxn = 50 + 8;
 const ll mod = 1e9 + 7;
 const ll inf = 1e16 + 8;
 const f pi = acos(-1.0);
@@ -187,13 +187,26 @@ vector<ll> g[maxn]; // id of target OR id of edge
 // ========== INSERT CODE BELOW ==========
 
 ll n;
+char s[maxn][maxn];
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+    cin >> n;
+    rep(i, 1, n) {
+        ll j = n + 1 - i;
+        if(i <= j) {
+            char t = (i & 1) ? '#' : '.';
+            rep(x, i, j) rep(y, i, j) {
+                s[x][y] = t;
+            }
+        }
+    }
 
-
+    rep(i, 1, n) {
+        cout << (s[i] + 1) << endl;
+    }
     return 0;
 }

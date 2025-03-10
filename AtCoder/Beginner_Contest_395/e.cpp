@@ -181,18 +181,62 @@ struct edge {
 
 vector<edge> edges;
 vector<ll> g[maxn]; // id of target OR id of edge
+vector<ll> g_rev[maxn];
 
 // graph END
 
 // ========== INSERT CODE BELOW ==========
 
-ll n;
+ll n, m, x, ans[maxn][2];
+
+struct node {
+    ll id, rev, cost;
+    bool operator<(const node &r) const {
+        return cost > r.cost;
+    }
+};
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+    cin >> n >> m >> x;
+    rep(i, 1, m) {
+        ll u, v;
+        cin >> u >> v;
+        g[u].pb(v);
+        g_rev[v].pb(u);
+    }
+
+    rep(i, 1, n) {
+        ans[i][0] = ans[i][1] = inf;
+    }
+
+    priority_queue<node> pq;
+    pq.push({1, 0, 0});
+
+    while (!pq.empty()) {
+        node cur = pq.top();
+        pq.pop();
+
+        if(cur.cost >= ans[cur.id][cur.rev]) {
+            continue;
+        }
+
+        ans[cur.id][cur.rev] = cur.cost;
+
+        if (cur.id == n) {
+            cout << cur.cost << endl;
+            return 0;
+        }
+        
+        pq.push({cur.id, 1 - cur.rev, cur.cost + x});
+        const vector<ll> &_g = cur.rev ? g_rev[cur.id] : g[cur.id];
+        for (ll to : _g) {
+            pq.push({to, cur.rev, cur.cost + 1});
+        }
+    }
 
 
     return 0;

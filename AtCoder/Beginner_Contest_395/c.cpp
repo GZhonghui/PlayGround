@@ -187,13 +187,25 @@ vector<ll> g[maxn]; // id of target OR id of edge
 // ========== INSERT CODE BELOW ==========
 
 ll n;
+unordered_map<ll, ll> last;
 
 int main()
 {
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
+    ll ans = inf;
+    cin >> n;
+    rep(i, 1, n) {
+        ll t;
+        cin >> t;
+        if(last.count(t)) {
+            ans = min(ans, i - last[t] + 1);
+        }
+        last[t] = i;
+    }
 
+    cout << (ans == inf ? -1 : ans) << endl;
 
     return 0;
 }

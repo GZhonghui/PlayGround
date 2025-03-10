@@ -193,7 +193,18 @@ int main()
 #ifdef ZH_DEBUG
     freopen("in.txt", "r", stdin);
 #endif
-
+    cin >> n;
+    ll last = -inf;
+    rep(i, 1, n) {
+        ll t;
+        cin >> t;
+        if(t <= last) {
+            cout << "No" << endl;
+            return 0;
+        }
+        last = t;
+    }
+    cout << "Yes" << endl;
 
     return 0;
 }
