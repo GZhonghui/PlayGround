@@ -198,9 +198,15 @@ int main()
     rep(i, 1, n) cin >> a[i];
 
     vector<S_both> initial(maxn, {0, 0, 1});
-    // lazy_segtree<S_both, op_both, e_both, F_both, mapping_both, composition_both, id_both> ltree(initial);
-    lazy_segtree<S_both, op_both, e_both, F_both, mapping_both, composition_both, id_both> rtree(initial);
+    lazy_segtree<S_both, op_both, e_both, F_both, mapping_both, composition_both, id_both> tree(initial);
 
+    l[0] = 0;
+    rep(i, 1, n) {
+        sl.insert(a[i]);
+        l[i] = sl.size();
+    }
+
+    r[n + 1] = 0;
     rre(i, 1, n) {
         sr.insert(a[i]);
         r[i] = sr.size();
@@ -209,21 +215,21 @@ int main()
     unordered_map<ll, ll> last_show;
     ll ans = 0;
     rep(i, 1, n - 1) {
-        ll t = r[i + 1];
+        ll right_sum = r[i + 1];
 
         ll push_v = a[i];
-        if(last_show.count(push_v)) {
-            ll last_pos = last_show[push_v];
-            rtree.apply(last_pos + 1, i + 1, F_both{1, 0, false});
-        } else {
-            rtree.apply(i, n + 1, F_both{1, 0, false});
+        tree.apply(i, F_both{1 + l[i - 1], 0, false});
+        
+        if(!last_show.count(push_v)) { 
+            last_show[push_v] = 0;
         }
+        ll last_pos = last_show[push_v];
+        tree.apply(last_pos + 1, i, F_both{1, 0, false});
         last_show[push_v] = i;
 
         if(i >= 2) {
-            ans = max(ans, t + rtree.prod(1, i + 1).max);
+            ans = max(ans, right_sum + tree.prod(2, i + 1).max);
         }
-
     }
     cout << ans << endl;
 
