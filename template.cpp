@@ -2,7 +2,9 @@
 
 // #pragma GCC optimize ("-O3") // use it only when in need
 
-// #define ZH_ACL // use atcoder library
+// #define ZH_ACL // use atcoder library, requires C++ >= 17
+
+// #define ZH_AHC // Heuristic Contest, otherwise it's a Algorithm contest
 
 #include <algorithm>
 #include <iostream>
@@ -14,6 +16,7 @@
 #include <vector>
 #include <random>
 #include <bitset> // for bitset, bitset<length>(int_number)
+#include <memory>
 #include <cmath>
 #include <stack>
 #include <queue>
@@ -42,6 +45,7 @@ using namespace std; // only in algorithm contests
 
 typedef int64_t ll;
 typedef uint64_t ull;
+typedef __int128_t i128;
 typedef long double f; // may cause WA on old version compiler...
 
 const int dx[4] = {-1,0,1,0};
@@ -179,14 +183,86 @@ struct edge {
     ll to,dis;
 };
 
+// graph END
+
+// global variables BEGIN
+
+ll n, m, k, a[maxn];
 vector<edge> edges;
 vector<ll> g[maxn]; // id of target OR id of edge
 
-// graph END
+// global variables END
+
+// AHC BEGIN
+
+#ifdef ZH_AHC
+
+class Solution {
+protected:
+    vector<ll> ans; // final answer
+
+public:
+    virtual ll solve() = 0;
+    void print() {
+        rep(i, 0, (ll)ans.size() - 1) {
+            cout << ans[i] << " ";
+        }
+        cout << endl;
+    }
+    ll score() { // calculate the score of the answer
+        // TODO: check if the answer is valid, otherwise return 0
+        
+        ll sum = 0;
+        rep(i, 0, (ll)ans.size() - 1) {
+            sum += ans[i];
+        }
+        return sum;
+    }
+};
+
+class SolutionDefault : public Solution {
+public:
+    // 'override' keyword is a C++11 extension
+    ll solve() /* override */ { // construct a default solution
+        rep(i, 1, 5) {
+            ans.pb(i);
+        }
+        return score();
+    }
+};
+
+#endif // ZH_AHC
+
+// AHC END
 
 // ========== INSERT CODE BELOW ==========
 
-ll n;
+#ifdef ZH_AHC
+void main_ahc() {
+    // TODO: read input
+
+    vector< shared_ptr<Solution> > solutions;
+    solutions.pb(make_shared<SolutionDefault>());
+
+    ll best_score = 0;
+    shared_ptr<Solution> best_solution;
+    rep(i, 0, (ll)solutions.size() - 1) {
+        ll score = solutions[i]->solve();
+        if (score > best_score) {
+            best_score = score;
+            best_solution = solutions[i];
+        }
+    }
+
+    best_solution->print();
+}
+#endif // ZH_AHC
+
+void main_algo() {
+
+}
+
+// ========== INSERT CODE ABOVE ==========
 
 int main()
 {
@@ -194,6 +270,11 @@ int main()
     freopen("in.txt", "r", stdin);
 #endif
 
+#ifdef ZH_AHC
+    main_ahc();
+#else
+    main_algo();
+#endif
 
     return 0;
 }
