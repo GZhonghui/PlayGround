@@ -6,6 +6,8 @@
 
 // #define ZH_AHC // Heuristic Contest, otherwise it's a Algorithm contest
 
+// #define TARGET_64 // enable 64-bits system features, like __int128
+
 #include <algorithm>
 #include <iostream>
 #include <iomanip>  // for setprecision
@@ -45,8 +47,10 @@ using namespace std; // only in algorithm contests
 
 typedef int64_t ll;
 typedef uint64_t ull;
-typedef __int128_t i128;
 typedef long double f; // may cause WA on old version compiler...
+#ifdef TARGET_64
+typedef __int128_t i128;
+#endif // TARGET_64
 
 const int dx[4] = {-1,0,1,0};
 const int dy[4] = {0,1,0,-1};
