@@ -286,19 +286,6 @@ public:
 
 } // namespace combination
 
-uint64_t pow(uint64_t base, uint64_t times)
-{
-    if(times == 0) return 1;
-    if(times == 1) return base;
-
-    uint64_t ans = pow(base, times>>1) % mod;
-    
-    ans = ans * ans % mod;
-    if(times % 2) ans = ans * base % mod;
-
-    return ans;
-}
-
 // ========== INSERT CODE BELOW ==========
 
 #ifdef ZH_AHC
@@ -322,7 +309,7 @@ void main_ahc() {
 }
 #endif // ZH_AHC
 
-ll sum[maxn][maxk], sum2[maxn][maxk];
+ll sum[maxn][maxk], ssum[maxn][maxk];
 void main_algo() {
     cin >> n >> k;
 
@@ -334,20 +321,8 @@ void main_algo() {
     }
 
     memset(sum, 0, sizeof(sum));
-    memset(sum2, 0, sizeof(sum2));
-    rep(j, 1, k) {
-        sum[0][j] = 0;
-        rep(i, 1, n) {
-            ll t = 1;
-            rep(x, 1, j) t = (t * a[i]) % mod;
-            sum[i][j] = (sum[i - 1][j] + t) % mod;
-        }
-    }
-    rep(i, 1, n) {
-        sum[i][0] = i;
-    }
-    memcpy(sum2, sum, sizeof(sum));
-
+    memset(ssum, 0, sizeof(ssum));
+    sum[0][0] = 1; // important
     rep(i, 1, n) {
         sum[i][0] = 1;
         sum[i][1] = (sum[i - 1][1] + a[i]) % mod;
@@ -358,15 +333,21 @@ void main_algo() {
         }
     }
 
-    swap(sum, sum2);
+    rep(j, 0, k) {
+        ssum[0][j] = sum[0][j]; // important
+        rep(i, 1, n) {
+            ssum[i][j] = (ssum[i - 1][j] + sum[i][j]) % mod;
+        }
+    }
 
     ll ans = 0;
     rep(j, 1, n) {
         rep(t, 0, k) {
-            ll local = comb.cal_C(k, t) % mod;
-            local = (local * sum[j][t]) % mod;
-            local = (local * sum2[j - 1][k - t]) % mod;
-            ans = (ans + local * ((k - t) & 1 ? -1 : 1)) % mod;
+            ll local = 1;
+            local = (local * comb.cal_C(k, t)) % mod;
+            local = (local * sum[j][k - t]) % mod;
+            local = (local * ssum[j - 1][t]) % mod;
+            ans = (ans + local * (t & 1 ? -1 : 1) + mod) % mod;
         }
     }
     cout << ans << endl;
