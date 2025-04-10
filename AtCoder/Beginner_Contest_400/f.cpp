@@ -265,6 +265,7 @@ void main_ahc() {
 ll c[maxn << 1], x[maxn], memo[maxn << 1][maxn << 1];
 
 ll dp(ll left, ll right) {
+    string debug;
     if (left > right) {
         return 0;
     }
@@ -278,14 +279,23 @@ ll dp(ll left, ll right) {
     } else {
         bool found = false;
         rep(i, left, right - 1) {
-            res = min(res, dp(left, i) + dp(i + 1, right));
+            if(res > dp(left, i) + dp(i + 1, right)) {
+                debug = "[" + to_string(left) + ", " + to_string(i) + "] + [" + to_string(i + 1) + ", " + to_string(right) + "]";
+                res = dp(left, i) + dp(i + 1, right);
+            }
+            // res = min(res, dp(left, i) + dp(i + 1, right));
 
             if(!found && c[left] == c[i + 1]) {
-                // found = true;
-                res = min(res, dp(left + 1, i) + dp(i + 1, right) + (i - left + 1));
+                found = true;
+                if(res > dp(left + 1, i) + dp(i + 1, right) + (i - left + 1)) {
+                    debug = "[" + to_string(left + 1) + ", " + to_string(i) + "] <- [" + to_string(left) + " <-> " + to_string(i + 1) + "]";
+                    res = dp(left + 1, i) + dp(i + 1, right) + (i - left + 1);
+                }
+                // res = min(res, dp(left + 1, i) + dp(i + 1, right) + (i - left + 1));
             }
         }
     }
+    cout << "dp(" << left << ", " << right << ") = " << res << " " << debug << endl;
     return res;
 }
 
