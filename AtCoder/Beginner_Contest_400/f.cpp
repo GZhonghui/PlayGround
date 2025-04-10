@@ -262,34 +262,30 @@ void main_ahc() {
 }
 #endif // ZH_AHC
 
-ll c[maxn << 1], x[maxn], l[maxn << 1], r[maxn << 1], memo[maxn << 1][maxn][maxn];
+ll c[maxn << 1], x[maxn], memo[maxn << 1][maxn << 1];
 
-ll dp(ll left, ll right, ll bg) {
+ll dp(ll left, ll right) {
     if (left > right) {
         return 0;
     }
-    if (memo[left][right - left + 1][bg] != -1) {
-        return memo[left][right - left + 1][bg];
+    if (memo[left][right] != -1) {
+        return memo[left][right];
     }
-    ll &res = memo[left][right - left + 1][bg] = inf;
+    ll &res = memo[left][right] = inf;
 
     if(left == right) {
-        if(c[left] == bg) {
-            res = 0;
-        } else {
-            res = 1 + x[c[left]];
-        }
+        res = 1 + x[c[left]];
     } else {
-        if(c[left] == c[right]) {
-            res = min(res, dp(r[left] + 1, l[right] - 1, c[left]) + (c[left] == bg ? 0 : x[c[left]] + (right - left + 1)));
-        }
-        // res = min(res, dp(r[left] + 1, right, bg) + (c[left] == bg ? 0 : x[c[left]] + r[left] - left + 1));
-        // res = min(res, dp(left, l[right] - 1, bg) + (c[right] == bg ? 0 : x[c[right]] + right - l[right] + 1));
+        bool found = false;
         rep(i, left, right - 1) {
-            res = min(res, dp(left, i, bg) + dp(i + 1, right, bg));
+            res = min(res, dp(left, i) + dp(i + 1, right));
+
+            if(!found && c[left] == c[i + 1]) {
+                // found = true;
+                res = min(res, dp(left + 1, i) + dp(i + 1, right) + (i - left + 1));
+            }
         }
     }
-    // cout << "[" << left << ", " << right << "] = " << res << endl;
     return res;
 }
 
@@ -302,27 +298,12 @@ void main_algo() {
     rep(i, 1, n) {
         cin >> x[i];
     }
-    rep(i, 1, n << 1) {
-        l[i] = r[i] = i;
-        rep(j, i + 1, n << 1) {
-            if (c[i] != c[j]) {
-                break;
-            }
-            r[i] = j;
-        }
-        rre(j, 1, i - 1) {
-            if (c[i] != c[j]) {
-                break;
-            }
-            l[i] = j;
-        }
-    }
 
     memset(memo, -1, sizeof(memo));
 
     ll res = inf;
     rep(i, 1, n) {
-        res = min(res, dp(i, i + n - 1, 0));
+        res = min(res, dp(i, i + n - 1));
     }
     cout << res << endl;
 }
