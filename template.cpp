@@ -239,6 +239,27 @@ public:
 
 // AHC END
 
+#ifdef ZH_AHC
+void main_ahc();
+#endif // ZH_AHC
+
+void main_algo();
+
+int main()
+{
+#ifdef ZH_DEBUG
+    freopen("in.txt", "r", stdin);
+#endif
+
+#ifdef ZH_AHC
+    main_ahc();
+#else
+    main_algo();
+#endif
+
+    return 0;
+}
+
 // ========== INSERT CODE BELOW ==========
 
 #ifdef ZH_AHC
@@ -264,21 +285,4 @@ void main_ahc() {
 
 void main_algo() {
 
-}
-
-// ========== INSERT CODE ABOVE ==========
-
-int main()
-{
-#ifdef ZH_DEBUG
-    freopen("in.txt", "r", stdin);
-#endif
-
-#ifdef ZH_AHC
-    main_ahc();
-#else
-    main_algo();
-#endif
-
-    return 0;
 }
