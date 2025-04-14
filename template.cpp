@@ -50,6 +50,32 @@ typedef uint64_t ull;
 typedef long double f; // may cause WA on old version compiler...
 #ifdef TARGET_64
 typedef __int128_t i128;
+inline void i128_i(i128 &v) {
+    string s;
+    cin >> s;
+    bool neg = (s[0] == '-');
+    v = 0;
+    for (int i = neg ? 1 : 0; i < (int)s.size(); i++) {
+        v = v * 10 + (s[i] - '0');
+    }
+    if (neg) v = -v;
+}
+inline void i128_o(i128 v) {
+    if (v == 0) {
+        cout << 0;
+        return;
+    }
+    bool neg = (v < 0);
+    if (neg) v = -v;
+    string s;
+    while (v > 0) {
+        s.push_back(char((v % 10) + '0'));
+        v /= 10;
+    }
+    if (neg) s.push_back('-');
+    reverse(s.begin(), s.end()); 
+    cout << s;
+}
 #endif // TARGET_64
 
 const int dx[4] = {-1,0,1,0};
