@@ -305,11 +305,66 @@ int8_t dp(ll k) {
         }
 
     }
+
+    return 0;
+}
+
+inline bool match(ll l) {
+    // cout << "match: " << l << endl;
+    rep(i, 1, m) {
+        char c = s[l + i - 1];
+        if(c == '#' || c == t[i]) {
+
+        } else {
+            return false;
+        }
+    }
+    return true;
 }
 
 void main_algo() {
     cin >> n >> m;
     cin >> (s + 1) >> (t + 1);
-    memset(memo, -1, sizeof(memo));
-    cout << (dp(n) ? "Yes" : "No") << endl;
+    // memset(memo, -1, sizeof(memo));
+    // cout << (dp(n) ? "Yes" : "No") << endl;
+
+    ll complated = 0;
+    queue<ll> Q;
+    unordered_set<ll> S;
+
+    rep(i, 1, n) {
+        bool flag = false;
+        rep(j, i - m + 1, i) {
+            if(j >= 1 && j + m - 1 <= n) {
+                flag |= match(j);
+            }
+        }
+        if(flag) {
+            S.insert(i);
+            Q.push(i);
+        }
+    }
+
+    while(!Q.empty()) {
+        ll i = Q.front();
+        Q.pop();
+
+        complated += 1;
+        s[i] = '#';
+        // cout << i << ": " << (s + 1) << endl;
+
+        rep(j, i - m + 1, i) {
+            if(j >= 1 && j + m - 1 <= n && match(j)) {
+                rep(k, 1, m) {
+                    ll id = j + k - 1;
+                    if(!S.count(id)) {
+                        S.insert(id);
+                        Q.push(id);
+                    }
+                }
+            }
+        }
+    }
+
+    cout << (complated == n ? "Yes" : "No") << endl;
 }
