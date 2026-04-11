@@ -311,7 +311,7 @@ void main_ahc() {
 
 ll h, w;
 char MAP[maxn][maxn];
-char REV[maxn][maxn][4];
+char REV[maxn][maxn];
 bool CHECK[maxn][maxn][4]; // [x][y][dir]
 
 struct state {
@@ -319,10 +319,14 @@ struct state {
     ll steps;
 };
 
-inline void print_ans(ll x, ll y, ll dir) {
-    if(REV[x][y][dir] == 0) return;
-    print_ans(x - dx[REV[x][y][dir]], y - dy[REV[x][y][dir]], REV[x][y][dir]);
-    cout << "URDL"[REV[x][y][dir]];
+void print_ans(ll x, ll y, const pair<ll, ll> &S) {
+    static ll cnt = 0;
+    if(++cnt > 100) return; // for safety
+
+    cout << x << " " << y << endl;
+    if(S == mk(x, y)) return;
+    print_ans(x - dx[REV[x][y]], y - dy[REV[x][y]], S);
+    cout << "URDL"[REV[x][y]];
 }
 
 void main_algo() {
@@ -344,6 +348,7 @@ void main_algo() {
     }
 
     memset(CHECK, false, sizeof(CHECK));
+    memset(REV, -1, sizeof(REV));
 
     queue<state> q;
     rep(i, 0, 3) {
@@ -354,11 +359,13 @@ void main_algo() {
         state s = q.front();
         q.pop();
 
-        cout << s.x << " " << s.y << " " << s.dir << endl;
+        if(CHECK[s.x][s.y][s.dir]) continue;
+        // cout << s.x << " " << s.y << " " << s.dir << endl;
 
         if(mk(s.x, s.y) == G) {
             cout << "Yes" << endl;
-            print_ans(G.first, G.second, s.dir);
+            print_ans(G.first, G.second, S);
+            cout << endl;
             return;
         }
 
@@ -369,7 +376,7 @@ void main_algo() {
             ll ny = s.y + dy[next_dir];
             if(MAP[nx][ny] != '#' && nx >= 1 && nx <= h && ny >= 1 && ny <= w && !CHECK[nx][ny][next_dir]) {
                 q.push({nx, ny, next_dir, s.steps + 1});
-                REV[nx][ny][next_dir] = s.dir;
+                REV[nx][ny] = next_dir;
             }
         };
 
@@ -379,7 +386,7 @@ void main_algo() {
             rep(next_dir, 0, 3) {
                 if(next_dir != s.dir) push(next_dir);
             }
-        } else if(MAP[s.x][s.y] == 'S') {
+        } else if(MAP[s.x][s.y] == 'S' || MAP[s.x][s.y] == '.') {
             rep(next_dir, 0, 3) {
                 push(next_dir);
             }
